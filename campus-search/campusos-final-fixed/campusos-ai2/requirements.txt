@@ -1,0 +1,11 @@
+anthropic==0.124.0
+fastapi==0.141.1
+google-genai==2.19.0
+httpx==0.28.1
+pydantic==2.13.4
+pydantic_core==2.46.4
+PyMySQL==1.2.0
+python-dotenv==1.2.3
+SQLAlchemy==2.0.52
+starlette==1.6.0
+uvicorn==0.52.4
