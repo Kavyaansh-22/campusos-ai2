@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/*
+  CampusOS design tokens.
+  Aesthetic direction: a digital campus directory board, not a generic
+  "search engine" or college ERP. Category color-coding + monospace
+  location codes echo real physical wayfinding signage.
+*/
+
+:root {
+  /* Core surface + text */
+  --color-paper: #fafaf9;
+  --color-paper-raised: #ffffff;
+  --color-ink: #14213d;
+  --color-slate: #5b6472;
+  --color-slate-light: #8b93a1;
+  --color-border: #e3e6ea;
+  --color-border-strong: #cdd2d9;
+
+  /* Signal accent — used sparingly (search focus, primary actions, logo mark) */
+  --color-signal: #e8a33d;
+  --color-signal-ink: #7a4e0f;
+
+  /* Category signage colors — one per module, consistent mid-tone saturation */
+  --color-cat-buildings: #2e6e8e;
+  --color-cat-departments: #3f7d52;
+  --color-cat-faculty: #8b5e3c;
+  --color-cat-labs: #6b5b95;
+  --color-cat-facilities: #1f7a6c;
+  --color-cat-offices: #a8425e;
+}
+
+@theme inline {
+  --color-paper: var(--color-paper);
+  --color-paper-raised: var(--color-paper-raised);
+  --color-ink: var(--color-ink);
+  --color-slate: var(--color-slate);
+  --color-slate-light: var(--color-slate-light);
+  --color-border: var(--color-border);
+  --color-border-strong: var(--color-border-strong);
+  --color-signal: var(--color-signal);
+  --color-signal-ink: var(--color-signal-ink);
+
+  --color-cat-buildings: var(--color-cat-buildings);
+  --color-cat-departments: var(--color-cat-departments);
+  --color-cat-faculty: var(--color-cat-faculty);
+  --color-cat-labs: var(--color-cat-labs);
+  --color-cat-facilities: var(--color-cat-facilities);
+  --color-cat-offices: var(--color-cat-offices);
+
+  /* Self-hosted via @fontsource/* (see app/layout.tsx) — no external
+     network fetch required, unlike next/font/google. */
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Visible keyboard focus everywhere — accessibility floor */
+:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
