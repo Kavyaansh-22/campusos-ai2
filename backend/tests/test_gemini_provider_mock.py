@@ -32,7 +32,7 @@ def test_tool_dispatch_then_final_answer():
 
     provider._client = MagicMock()
     provider._client.chats.create.return_value = mock_chat
-    provider._model_name = "gemini-2.5-flash"
+    provider._model_name = "gemini-3.6-flash"
     provider._config = MagicMock()
 
     db = SessionLocal()
@@ -61,7 +61,7 @@ def test_no_results_does_not_hallucinate():
 
     provider._client = MagicMock()
     provider._client.chats.create.return_value = mock_chat
-    provider._model_name = "gemini-2.5-flash"
+    provider._model_name = "gemini-3.6-flash"
     provider._config = MagicMock()
 
     db = SessionLocal()

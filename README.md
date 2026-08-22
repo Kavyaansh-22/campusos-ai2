@@ -87,7 +87,7 @@ DB_PASSWORD=your_mysql_password
 # AI_PROVIDER: "gemini" or "anthropic"
 AI_PROVIDER=gemini
 AI_API_KEY=your_gemini_api_key
-AI_MODEL=gemini-2.5-flash
+AI_MODEL= gemini-3.6-flash
 ```
 
 Get a Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey).

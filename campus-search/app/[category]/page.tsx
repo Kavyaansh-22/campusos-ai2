@@ -47,9 +47,10 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   const query = (q ?? "").trim();
   const cat = getCategory(category);
 
+  // Added await to the search and getAll functions
   const items: CampusEntity[] = query
-    ? search(query, [category]).map((r) => r.entity)
-    : getAll<CampusEntity>(category);
+    ? (await search(query, [category])).map((r) => r.entity)
+    : await getAll<CampusEntity>(category);
 
   return (
     <>

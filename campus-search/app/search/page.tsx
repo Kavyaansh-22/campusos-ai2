@@ -27,7 +27,9 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const query = (params.q ?? "").trim();
   const activeCategory = isCategorySlug(params.cat) ? params.cat : undefined;
 
-  const grouped = query ? searchGrouped(query) : null;
+  // Await the asynchronous searchGrouped function
+  const grouped = query ? await searchGrouped(query) : null;
+  
   const groupsToShow = grouped
     ? activeCategory
       ? grouped.groups.filter((g) => g.category === activeCategory)

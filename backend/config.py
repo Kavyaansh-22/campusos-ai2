@@ -27,7 +27,7 @@ class Settings:
     # a third provider later doesn't touch anything outside that one file.
     AI_PROVIDER: str = os.getenv("AI_PROVIDER", "gemini")
     AI_API_KEY: str = os.getenv("AI_API_KEY", "")
-    AI_MODEL: str = os.getenv("AI_MODEL", "gemini-2.5-flash")
+    AI_MODEL: str = os.getenv("AI_MODEL", "gemini-3.6-flash")
 
     # --- App ---
     APP_ENV: str = os.getenv("APP_ENV", "development")

@@ -13,6 +13,8 @@ const NAV_LINKS = [
     label: c.slug === "offices" ? "Offices" : c.label,
     href: `/${c.slug}`,
   })),
+  // 🚀 Added the AI Chat link right here!
+  { label: "AI Chat ✨", href: "/chat" }, 
 ];
 
 export function Header() {
@@ -29,10 +31,7 @@ export function Header() {
           <span className="hidden text-[11px] text-slate sm:block">Your MIT-WPU Campus Guide</span>
         </Link>
 
-        {/* Desktop nav — switches on at lg (1024px), not md. 8 links need
-            roughly 750px on their own; turning them on at md (768px) would
-            overlap the logo on tablet-width screens, which the product
-            spec explicitly requires supporting. */}
+        {/* Desktop nav */}
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
           {NAV_LINKS.map((link) => {
             const active = link.href !== "/#categories" && pathname === link.href;
@@ -44,7 +43,9 @@ export function Header() {
                   "rounded-full px-3 py-2 text-sm transition-colors",
                   active
                     ? "bg-paper font-medium text-ink"
-                    : "text-slate hover:bg-paper hover:text-ink"
+                    : "text-slate hover:bg-paper hover:text-ink",
+                  // Added a little text emphasis specifically for the AI Chat button
+                  link.label.includes("AI Chat") && "text-blue-600 font-medium hover:text-blue-700"
                 )}
               >
                 {link.label}
@@ -53,7 +54,7 @@ export function Header() {
           })}
         </nav>
 
-        {/* Mobile/tablet menu toggle — 44px touch target (WCAG 2.5.5) */}
+        {/* Mobile/tablet menu toggle */}
         <button
           type="button"
           className="flex h-11 w-11 items-center justify-center rounded-lg border border-border text-ink lg:hidden"
@@ -81,7 +82,8 @@ export function Header() {
                     onClick={() => setMenuOpen(false)}
                     className={cn(
                       "block rounded-lg px-3 py-3 text-sm",
-                      active ? "font-medium text-ink bg-paper" : "text-slate"
+                      active ? "font-medium text-ink bg-paper" : "text-slate",
+                      link.label.includes("AI Chat") && "text-blue-600 font-medium"
                     )}
                   >
                     {link.label}

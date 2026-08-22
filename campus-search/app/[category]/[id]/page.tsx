@@ -20,17 +20,26 @@ interface DetailPageProps {
   params: Promise<{ category: string; id: string }>;
 }
 
-export function generateStaticParams() {
-  return CATEGORIES.flatMap((cat) =>
-    getAll<CampusEntity>(cat.slug).map((entity) => ({ category: cat.slug, id: entity.id }))
-  );
+export async function generateStaticParams() {
+  const paths: { category: string; id: string }[] = [];
+  
+  for (const cat of CATEGORIES) {
+    const entities = await getAll<CampusEntity>(cat.slug);
+    for (const entity of entities) {
+      paths.push({ category: cat.slug, id: entity.id });
+    }
+  }
+  
+  return paths;
 }
 
 export async function generateMetadata({ params }: DetailPageProps): Promise<Metadata> {
   const { category, id } = await params;
   if (!isCategorySlug(category)) return {};
-  const entity = getById(category, id);
+  
+  const entity = await getById(category, id);
   if (!entity) return {};
+  
   return { title: `${entity.name} — CampusOS` };
 }
 
@@ -38,13 +47,16 @@ export default async function DetailPage({ params }: DetailPageProps) {
   const { category, id } = await params;
   if (!isCategorySlug(category)) notFound();
 
-  const entity = getById(category, id);
+  // Await the database fetch
+  const entity = await getById(category, id);
   if (!entity) notFound();
 
   const cat = getCategory(category);
   const intro = entityIntro(entity);
-  const fields = buildDetailFields(entity);
-  const relatedGroups = getRelatedGroups(entity);
+  
+  // Await the UI mapping helpers
+  const fields = await buildDetailFields(entity);
+  const relatedGroups = await getRelatedGroups(entity);
 
   return (
     <>

@@ -5,19 +5,18 @@ export function entityHref(category: CategorySlug, id: string): string {
   return `/${category}/${id}`;
 }
 
-/** A one-line descriptor shown under the entity's name (varies by type). */
-export function entitySubtitle(entity: CampusEntity): string {
+export async function entitySubtitle(entity: CampusEntity): Promise<string> {
   switch (entity.type) {
     case "building":
       return entity.description;
     case "department":
       return entity.school;
     case "faculty": {
-      const dept = getById("departments", entity.departmentId) as Department | undefined;
+      const dept = await getById("departments", entity.departmentId) as Department | undefined;
       return [entity.designation, dept?.name].filter(Boolean).join(" · ");
     }
     case "lab": {
-      const dept = getById("departments", entity.departmentId) as Department | undefined;
+      const dept = await getById("departments", entity.departmentId) as Department | undefined;
       return dept?.name ?? "";
     }
     case "facility":
@@ -27,8 +26,7 @@ export function entitySubtitle(entity: CampusEntity): string {
   }
 }
 
-/** The 📍-style location line shown under the subtitle, if any. */
-export function entityLocationLine(entity: CampusEntity): string | undefined {
+export async function entityLocationLine(entity: CampusEntity): Promise<string | undefined> {
   switch (entity.type) {
     case "building":
       return entity.location;
@@ -37,7 +35,7 @@ export function entityLocationLine(entity: CampusEntity): string | undefined {
     case "faculty":
       return entity.officeLocation;
     case "lab": {
-      const building = getById("buildings", entity.buildingId) as Building | undefined;
+      const building = await getById("buildings", entity.buildingId) as Building | undefined;
       return [building?.name, entity.floor, entity.room ? `Room ${entity.room}` : undefined]
         .filter(Boolean)
         .join(", ");
@@ -49,7 +47,6 @@ export function entityLocationLine(entity: CampusEntity): string | undefined {
   }
 }
 
-/** The lede paragraph shown at the top of a detail page, if the entity has one. */
 export function entityIntro(entity: CampusEntity): string | undefined {
   switch (entity.type) {
     case "building":
@@ -70,12 +67,7 @@ export interface DetailField {
   href?: string;
 }
 
-/**
- * The structured "spec sheet" rows shown on a detail page, per the field
- * list in section 6 of the product brief. Skips any optional field the
- * entity doesn't have rather than showing an empty row.
- */
-export function buildDetailFields(entity: CampusEntity): DetailField[] {
+export async function buildDetailFields(entity: CampusEntity): Promise<DetailField[]> {
   const fields: DetailField[] = [];
 
   switch (entity.type) {
@@ -86,7 +78,7 @@ export function buildDetailFields(entity: CampusEntity): DetailField[] {
       break;
     }
     case "department": {
-      const building = getById("buildings", entity.buildingId ?? "") as Building | undefined;
+      const building = await getById("buildings", entity.buildingId ?? "") as Building | undefined;
       fields.push({ label: "School", value: entity.school });
       fields.push({ label: "Location", value: entity.location });
       if (building) fields.push({ label: "Building", value: building.name, href: `/buildings/${building.id}` });
@@ -95,7 +87,7 @@ export function buildDetailFields(entity: CampusEntity): DetailField[] {
       break;
     }
     case "faculty": {
-      const dept = getById("departments", entity.departmentId) as Department | undefined;
+      const dept = await getById("departments", entity.departmentId) as Department | undefined;
       if (dept) fields.push({ label: "Department", value: dept.name, href: `/departments/${dept.id}` });
       fields.push({ label: "Designation", value: entity.designation });
       if (entity.subjects?.length) fields.push({ label: "Subjects", value: entity.subjects.join(", ") });
@@ -107,8 +99,8 @@ export function buildDetailFields(entity: CampusEntity): DetailField[] {
       break;
     }
     case "lab": {
-      const dept = getById("departments", entity.departmentId) as Department | undefined;
-      const building = getById("buildings", entity.buildingId) as Building | undefined;
+      const dept = await getById("departments", entity.departmentId) as Department | undefined;
+      const building = await getById("buildings", entity.buildingId) as Building | undefined;
       if (dept) fields.push({ label: "Department", value: dept.name, href: `/departments/${dept.id}` });
       if (building) fields.push({ label: "Building", value: building.name, href: `/buildings/${building.id}` });
       if (entity.floor) fields.push({ label: "Floor", value: entity.floor });
@@ -117,7 +109,7 @@ export function buildDetailFields(entity: CampusEntity): DetailField[] {
       break;
     }
     case "facility": {
-      const building = getById("buildings", entity.buildingId ?? "") as Building | undefined;
+      const building = await getById("buildings", entity.buildingId ?? "") as Building | undefined;
       fields.push({ label: "Category", value: entity.category });
       fields.push({ label: "Location", value: entity.location });
       if (building) fields.push({ label: "Building", value: building.name, href: `/buildings/${building.id}` });
@@ -127,11 +119,11 @@ export function buildDetailFields(entity: CampusEntity): DetailField[] {
       break;
     }
     case "office": {
-      const building = getById("buildings", entity.buildingId ?? "") as Building | undefined;
+      const building = await getById("buildings", entity.buildingId ?? "") as Building | undefined;
       fields.push({ label: "Location", value: entity.location });
       if (building) fields.push({ label: "Building", value: building.name, href: `/buildings/${building.id}` });
       if (entity.timings) fields.push({ label: "Timings", value: entity.timings });
-      if (entity.servicesProvided.length)
+      if (entity.servicesProvided?.length)
         fields.push({ label: "Services Provided", value: entity.servicesProvided.join(", ") });
       if (entity.contact?.email) fields.push({ label: "Email", value: entity.contact.email });
       if (entity.contact?.phone) fields.push({ label: "Phone", value: entity.contact.phone });

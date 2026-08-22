@@ -3,10 +3,10 @@ import type { CampusEntity, CategorySlug } from "@/types";
 import { getCategory } from "@/lib/categories";
 import { entityHref, entitySubtitle, entityLocationLine } from "@/lib/entityDisplay";
 
-export function ResultCard({ entity, category }: { entity: CampusEntity; category: CategorySlug }) {
+export async function ResultCard({ entity, category }: { entity: CampusEntity; category: CategorySlug }) {
   const cat = getCategory(category);
-  const subtitle = entitySubtitle(entity);
-  const location = entityLocationLine(entity);
+  const subtitle = await entitySubtitle(entity);
+  const location = await entityLocationLine(entity);
 
   return (
     <Link
